@@ -12,7 +12,7 @@ import android.view.MenuItem;
 
 import com.beginner.micromaster.flashcardsapp.R;
 import com.beginner.micromaster.flashcardsapp.adapter.CardAdapter;
-import com.beginner.micromaster.flashcardsapp.database.DataBaseDAO;
+import com.beginner.micromaster.flashcardsapp.data.DataBaseDAO;
 import com.beginner.micromaster.flashcardsapp.dialog.AddCardDialogFragment;
 import com.beginner.micromaster.flashcardsapp.model.Card;
 import com.google.gson.Gson;

@@ -23,6 +23,11 @@
             android:name=".activities.AnswerActivity"
             android:label="@string/title_activity_answer"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+        <provider
+            android:name=".data.CardProvider"
+			android:authorities="com.beginner.micromaster.flashcardsapp"
+			android:exported="false"
+			android:syncable="true"/>
     </application>
 
 </manifest>
