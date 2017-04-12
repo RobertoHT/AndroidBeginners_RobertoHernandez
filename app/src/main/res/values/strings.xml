@@ -7,4 +7,5 @@
     <string name="title_add_card_dialog">Add a new question</string>
     <string name="button_add">Add</string>
     <string name="button_cancel">Cancel</string>
+    <string name="title_activity_answer">AnswerActivity</string>
 </resources>
