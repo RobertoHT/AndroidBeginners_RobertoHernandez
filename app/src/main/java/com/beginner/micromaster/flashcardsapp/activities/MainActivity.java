@@ -15,8 +15,13 @@ import com.beginner.micromaster.flashcardsapp.adapter.CardAdapter;
 import com.beginner.micromaster.flashcardsapp.database.DataBaseDAO;
 import com.beginner.micromaster.flashcardsapp.dialog.AddCardDialogFragment;
 import com.beginner.micromaster.flashcardsapp.model.Card;
+import com.google.gson.Gson;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+
+import static com.beginner.micromaster.flashcardsapp.reader.JsonReader.loadJsonFromAsset;
 
 public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
@@ -32,15 +37,10 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        recyclerView = (RecyclerView) findViewById(R.id.rvCards);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
-
         dao = new DataBaseDAO(this);
-        cardList = getCardList();
 
-        adapter = new CardAdapter(this, cardList);
-        recyclerView.setAdapter(adapter);
+        getViews();
+        getData();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -52,7 +52,33 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private List<Card> getCardList(){
+    private void getViews(){
+        recyclerView = (RecyclerView) findViewById(R.id.rvCards);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+    }
+
+    private void getData(){
+        cardList = getCardListFromJson();
+
+        cardList.addAll(getCardListFromDB());
+
+        adapter = new CardAdapter(this, cardList);
+        recyclerView.setAdapter(adapter);
+    }
+
+    private List<Card> getCardListFromJson(){
+        List<Card> list;
+
+        String json = loadJsonFromAsset(getApplicationContext(), "cards.json");
+        Gson gson = new Gson();
+        Card[] cards = gson.fromJson(json, Card[].class);
+        list = new ArrayList<Card>(Arrays.asList(cards));
+
+        return list;
+    }
+
+    private List<Card> getCardListFromDB(){
         List<Card> list;
 
         dao.open();
