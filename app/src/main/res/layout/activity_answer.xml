@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:padding="@dimen/fab_margin"
     android:orientation="vertical"
-    tools:context="com.beginner.micromaster.flashcardsapp.AnswerActivity">
+    tools:context="com.beginner.micromaster.flashcardsapp.activities.AnswerActivity">
 
     <TextView
         android:id="@+id/tvQuestion"

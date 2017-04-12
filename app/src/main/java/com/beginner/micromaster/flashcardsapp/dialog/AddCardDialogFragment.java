@@ -1,4 +1,4 @@
-package com.beginner.micromaster.flashcardsapp;
+package com.beginner.micromaster.flashcardsapp.dialog;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -10,12 +10,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 
+import com.beginner.micromaster.flashcardsapp.R;
+import com.beginner.micromaster.flashcardsapp.database.DataBaseDAO;
+import com.beginner.micromaster.flashcardsapp.model.Card;
+
 /**
  * Created by praxis on 11/04/17.
  */
 
 public class AddCardDialogFragment extends DialogFragment {
-    String cadena;
+    private DataBaseDAO dao;
 
     public static AddCardDialogFragment getInstance(){
         AddCardDialogFragment fragment = new AddCardDialogFragment();
@@ -25,6 +29,8 @@ public class AddCardDialogFragment extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        dao = new DataBaseDAO(getActivity());
     }
 
     @Override
@@ -40,13 +46,17 @@ public class AddCardDialogFragment extends DialogFragment {
         builder.setPositiveButton(getString(R.string.button_add), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                cadena = etQuestion.getText().toString() + " - " + etAnswer.getText().toString();
-                Log.d("ADD", cadena);
+                String question = etQuestion.getText().toString();
+                String answer = etAnswer.getText().toString();
+
+                dao.open();
+                dao.addCard(new Card(question, answer));
+                dao.close();
             }
         }).setNegativeButton(getString(R.string.button_cancel), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                Log.d("CANCEL", "Cancel create");
+                Log.d("CANCEL", "Cancel add");
             }
         });
 

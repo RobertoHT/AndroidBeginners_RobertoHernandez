@@ -1,10 +1,8 @@
-package com.beginner.micromaster.flashcardsapp;
+package com.beginner.micromaster.flashcardsapp.activities;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -12,15 +10,20 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.beginner.micromaster.flashcardsapp.R;
 import com.beginner.micromaster.flashcardsapp.adapter.CardAdapter;
+import com.beginner.micromaster.flashcardsapp.database.DataBaseDAO;
+import com.beginner.micromaster.flashcardsapp.dialog.AddCardDialogFragment;
+import com.beginner.micromaster.flashcardsapp.model.Card;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private CardAdapter adapter;
-    private List<String> questionList;
+
+    private List<Card> cardList;
+    private DataBaseDAO dao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,16 +32,14 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        questionList = new ArrayList<String>();
-        questionList.add("What is an activity?");
-        questionList.add("What is a fragment?");
-        questionList.add("What is an intent?");
-
         recyclerView = (RecyclerView) findViewById(R.id.rvCards);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
-        adapter = new CardAdapter(this, questionList);
+        dao = new DataBaseDAO(this);
+        cardList = getCardList();
+
+        adapter = new CardAdapter(this, cardList);
         recyclerView.setAdapter(adapter);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -49,6 +50,16 @@ public class MainActivity extends AppCompatActivity {
                 dialogFragment.show(getFragmentManager(), "addCard");
             }
         });
+    }
+
+    private List<Card> getCardList(){
+        List<Card> list;
+
+        dao.open();
+        list = dao.getAllCards();
+        dao.close();
+
+        return list;
     }
 
     @Override

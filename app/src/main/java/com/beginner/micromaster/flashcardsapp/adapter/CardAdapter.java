@@ -8,8 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.beginner.micromaster.flashcardsapp.AnswerActivity;
+import com.beginner.micromaster.flashcardsapp.activities.AnswerActivity;
 import com.beginner.micromaster.flashcardsapp.R;
+import com.beginner.micromaster.flashcardsapp.model.Card;
 
 import java.util.List;
 
@@ -19,11 +20,11 @@ import java.util.List;
 
 public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder>{
     private Context context;
-    private List<String> questionList;
+    private List<Card> cardList;
 
-    public CardAdapter(Context context, List<String> questionList) {
+    public CardAdapter(Context context, List<Card> cardList) {
         this.context = context;
-        this.questionList = questionList;
+        this.cardList = cardList;
     }
 
     public Context getContext() {
@@ -38,12 +39,12 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder>{
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.txtQuestion.setText(questionList.get(position));
+        holder.txtQuestion.setText(cardList.get(position).getQuestion());
     }
 
     @Override
     public int getItemCount() {
-        return questionList.size();
+        return cardList.size();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
@@ -58,10 +59,12 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder>{
 
         @Override
         public void onClick(View view) {
-            String question = questionList.get(getAdapterPosition());
+            String question = cardList.get(getAdapterPosition()).getQuestion();
+            String answer = cardList.get(getAdapterPosition()).getAnswer();
 
             Intent intent = new Intent(getContext(), AnswerActivity.class);
             intent.putExtra("question", question);
+            intent.putExtra("answer", answer);
             getContext().startActivity(intent);
         }
     }
