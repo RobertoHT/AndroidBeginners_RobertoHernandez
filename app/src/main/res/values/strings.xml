@@ -6,6 +6,14 @@
 
     <string name="title_add_card_dialog">Add a new question</string>
     <string name="button_add">Add</string>
+    <string name="button_ok">OK</string>
     <string name="button_cancel">Cancel</string>
     <string name="title_activity_answer">AnswerActivity</string>
+
+    <string name="setting_title_reminder">Reminder</string>
+    <string name="setting_activate">Activate reminder</string>
+    <string name="setting_frequency">Frequency</string>
+    <string name="setting_frequency_summary">10 hours</string>
+
+    <string name="dialog_number_hour">Hour</string>
 </resources>

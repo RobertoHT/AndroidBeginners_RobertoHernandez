@@ -1,11 +1,15 @@
 package com.beginner.micromaster.flashcardsapp.activities;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,6 +18,7 @@ import com.beginner.micromaster.flashcardsapp.R;
 import com.beginner.micromaster.flashcardsapp.adapter.CardAdapter;
 import com.beginner.micromaster.flashcardsapp.data.DataBaseDAO;
 import com.beginner.micromaster.flashcardsapp.dialog.AddCardDialogFragment;
+import com.beginner.micromaster.flashcardsapp.menu.SettingsActivity;
 import com.beginner.micromaster.flashcardsapp.model.Card;
 import com.google.gson.Gson;
 
@@ -42,6 +47,13 @@ public class MainActivity extends AppCompatActivity {
         getViews();
         getData();
 
+        PreferenceManager.setDefaultValues(this, R.xml.settings, false);
+
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean activate = preferences.getBoolean("activate", false);
+        int frequency = preferences.getInt("frequency", 10);
+        Log.d("PREFERENCE onCreate","activate: "+activate+" frequency: "+frequency);
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -50,6 +62,15 @@ public class MainActivity extends AppCompatActivity {
                 dialogFragment.show(getFragmentManager(), "addCard");
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean activate = preferences.getBoolean("activate", false);
+        int frequency = preferences.getInt("frequency", 10);
+        Log.d("PREFERENCE onResume","activate: "+activate+" frequency: "+frequency);
     }
 
     private void getViews(){
@@ -98,8 +119,8 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            startActivity(new Intent(this, SettingsActivity.class));
             return true;
         }
 
