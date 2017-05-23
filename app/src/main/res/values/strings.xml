@@ -16,4 +16,8 @@
     <string name="setting_frequency_summary">10 hours</string>
 
     <string name="dialog_number_hour">Hour</string>
+
+    <string name="widget.button.question">SEE QUESTION</string>
+    <string name="widget.button.answer">SEE ANSWER</string>
+    <string name="widget.button.next">NEXT QUESTION</string>
 </resources>
