@@ -4,6 +4,9 @@
     <string name="hint_question">Question</string>
     <string name="hint_answer">Answer</string>
 
+    <string name="notification_title">It\'s time to study!</string>
+    <string name="notification_text">Touch to start your study session</string>
+
     <string name="title_add_card_dialog">Add a new question</string>
     <string name="button_add">Add</string>
     <string name="button_ok">OK</string>

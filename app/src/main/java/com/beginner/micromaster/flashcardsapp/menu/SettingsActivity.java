@@ -1,6 +1,10 @@
 package com.beginner.micromaster.flashcardsapp.menu;
 
 import android.app.FragmentTransaction;
+import android.app.job.JobInfo;
+import android.app.job.JobScheduler;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.Preference;
@@ -10,6 +14,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
 import com.beginner.micromaster.flashcardsapp.R;
+import com.beginner.micromaster.flashcardsapp.service.ReminderService;
 
 /**
  * Created by praxis on 11/05/17.
@@ -25,6 +30,9 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     public class SettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener{
+        private int HOUR = 3600000;
+        private int JOB_ID = 1;
+
         public SettingsFragment() {}
 
         @Override
@@ -39,8 +47,27 @@ public class SettingsActivity extends AppCompatActivity {
 
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            if(key.equals("frequency")){
+            if(key.equals("activate")){
+                enableReminder(sharedPreferences, key);
+            }
+            else if (key.equals("frequency")){
                 changeSummaryFrequency(key, sharedPreferences.getInt(key, 10));
+            }
+        }
+
+        private void enableReminder(SharedPreferences sharedPreferences, String key){
+            JobScheduler jobScheduler = (JobScheduler) getSystemService(Context.JOB_SCHEDULER_SERVICE);
+            ComponentName jobService = new ComponentName(getPackageName(), ReminderService.class.getName());
+
+            boolean activate = sharedPreferences.getBoolean(key, false);
+            if(activate){
+                jobScheduler.cancelAll();
+
+                int refresh = HOUR * sharedPreferences.getInt("frequency", 10);
+                JobInfo jobInfo = new JobInfo.Builder(JOB_ID, jobService).setPeriodic(refresh).build();
+                jobScheduler.schedule(jobInfo);
+            } else {
+                jobScheduler.cancel(JOB_ID);
             }
         }
 
