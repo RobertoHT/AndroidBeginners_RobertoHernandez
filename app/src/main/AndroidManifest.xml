@@ -32,7 +32,7 @@
                 android:value=".activities.MainActivity"/>
         </activity>
         <provider
-            android:name=".data.CardProvider"
+            android:name=".data.provider.CardProvider"
 			android:authorities="com.beginner.micromaster.flashcardsapp"
 			android:exported="false"
 			android:syncable="true"/>

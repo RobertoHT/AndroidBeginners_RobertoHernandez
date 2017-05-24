@@ -1,7 +1,6 @@
 package com.beginner.micromaster.flashcardsapp.activities;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
@@ -9,14 +8,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.beginner.micromaster.flashcardsapp.R;
 import com.beginner.micromaster.flashcardsapp.adapter.CardAdapter;
-import com.beginner.micromaster.flashcardsapp.data.DataBaseDAO;
+import com.beginner.micromaster.flashcardsapp.data.database.DataBaseDAO;
 import com.beginner.micromaster.flashcardsapp.dialog.AddCardDialogFragment;
 import com.beginner.micromaster.flashcardsapp.menu.SettingsActivity;
 import com.beginner.micromaster.flashcardsapp.model.Card;
@@ -26,13 +24,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.beginner.micromaster.flashcardsapp.reader.JsonReader.loadJsonFromAsset;
+import static com.beginner.micromaster.flashcardsapp.data.reader.JsonReader.loadJsonFromAsset;
 
 public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
-    private CardAdapter adapter;
 
-    private List<Card> cardList;
     private DataBaseDAO dao;
 
     @Override
@@ -49,11 +45,6 @@ public class MainActivity extends AppCompatActivity {
 
         PreferenceManager.setDefaultValues(this, R.xml.settings, false);
 
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        boolean activate = preferences.getBoolean("activate", false);
-        int frequency = preferences.getInt("frequency", 10);
-        Log.d("PREFERENCE onCreate","activate: "+activate+" frequency: "+frequency);
-
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,15 +55,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        boolean activate = preferences.getBoolean("activate", false);
-        int frequency = preferences.getInt("frequency", 10);
-        Log.d("PREFERENCE onResume","activate: "+activate+" frequency: "+frequency);
-    }
-
     private void getViews(){
         recyclerView = (RecyclerView) findViewById(R.id.rvCards);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -80,11 +62,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getData(){
-        cardList = getCardListFromJson();
+        List<Card> cardList = getCardListFromJson();
 
         cardList.addAll(getCardListFromDB());
 
-        adapter = new CardAdapter(this, cardList);
+        CardAdapter adapter = new CardAdapter(this, cardList);
         recyclerView.setAdapter(adapter);
     }
 

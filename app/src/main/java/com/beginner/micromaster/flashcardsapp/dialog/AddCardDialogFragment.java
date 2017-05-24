@@ -11,7 +11,7 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.beginner.micromaster.flashcardsapp.R;
-import com.beginner.micromaster.flashcardsapp.data.DataBaseDAO;
+import com.beginner.micromaster.flashcardsapp.data.database.DataBaseDAO;
 import com.beginner.micromaster.flashcardsapp.model.Card;
 
 /**

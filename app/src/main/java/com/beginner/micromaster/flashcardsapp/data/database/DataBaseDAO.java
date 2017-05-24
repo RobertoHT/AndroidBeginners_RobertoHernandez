@@ -1,4 +1,4 @@
-package com.beginner.micromaster.flashcardsapp.data;
+package com.beginner.micromaster.flashcardsapp.data.database;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -11,8 +11,6 @@ import com.beginner.micromaster.flashcardsapp.model.Card;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.beginner.micromaster.flashcardsapp.data.DataContract.*;
 
 /**
  * Created by praxis on 12/04/17.
@@ -36,21 +34,21 @@ public class DataBaseDAO {
 
     public void addCard(Card card){
         ContentValues values = new ContentValues();
-        values.put(TodoEntry.COLUMN_QUESTION, card.getQuestion());
-        values.put(TodoEntry.COLUMN_ANSWER, card.getAnswer());
+        values.put(DataContract.TodoEntry.COLUMN_QUESTION, card.getQuestion());
+        values.put(DataContract.TodoEntry.COLUMN_ANSWER, card.getAnswer());
 
-        int result = (int) sqLiteDatabase.insert(TodoEntry.TABLE_CARDS, null, values);
+        int result = (int) sqLiteDatabase.insert(DataContract.TodoEntry.TABLE_CARDS, null, values);
         Log.d("insert","result: " + result);
     }
 
     public List<Card> getAllCards(){
         List<Card> cardList = new ArrayList<Card>();
-        Cursor cursor = sqLiteDatabase.query(TodoEntry.TABLE_CARDS, null, null, null, null, null, null);
+        Cursor cursor = sqLiteDatabase.query(DataContract.TodoEntry.TABLE_CARDS, null, null, null, null, null, null);
 
         if(cursor.moveToFirst()){
             do{
-                String question = cursor.getString(cursor.getColumnIndexOrThrow(TodoEntry.COLUMN_QUESTION));
-                String answer = cursor.getString(cursor.getColumnIndexOrThrow(TodoEntry.COLUMN_ANSWER));
+                String question = cursor.getString(cursor.getColumnIndexOrThrow(DataContract.TodoEntry.COLUMN_QUESTION));
+                String answer = cursor.getString(cursor.getColumnIndexOrThrow(DataContract.TodoEntry.COLUMN_ANSWER));
 
                 cardList.add(new Card(question, answer));
             }while (cursor.moveToNext());

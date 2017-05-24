@@ -1,4 +1,4 @@
-package com.beginner.micromaster.flashcardsapp.data;
+package com.beginner.micromaster.flashcardsapp.data.database;
 
 import android.content.ContentUris;
 import android.net.Uri;

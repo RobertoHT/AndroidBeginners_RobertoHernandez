@@ -9,7 +9,7 @@ import android.content.SharedPreferences;
 import android.widget.RemoteViews;
 
 import com.beginner.micromaster.flashcardsapp.R;
-import com.beginner.micromaster.flashcardsapp.data.DataBaseDAO;
+import com.beginner.micromaster.flashcardsapp.data.database.DataBaseDAO;
 import com.beginner.micromaster.flashcardsapp.model.Card;
 import com.google.gson.Gson;
 
@@ -18,7 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-import static com.beginner.micromaster.flashcardsapp.reader.JsonReader.loadJsonFromAsset;
+import static com.beginner.micromaster.flashcardsapp.data.reader.JsonReader.loadJsonFromAsset;
 
 /**
  * Created by praxis on 18/05/17.

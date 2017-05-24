@@ -1,4 +1,4 @@
-package com.beginner.micromaster.flashcardsapp.reader;
+package com.beginner.micromaster.flashcardsapp.data.reader;
 
 import android.content.Context;
 
