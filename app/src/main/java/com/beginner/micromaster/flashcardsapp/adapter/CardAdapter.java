@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.beginner.micromaster.flashcardsapp.activities.AnswerActivity;
 import com.beginner.micromaster.flashcardsapp.R;
 import com.beginner.micromaster.flashcardsapp.model.Card;
+import com.beginner.micromaster.flashcardsapp.util.Constants;
 
 import java.util.List;
 
@@ -63,8 +64,8 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder>{
             String answer = cardList.get(getAdapterPosition()).getAnswer();
 
             Intent intent = new Intent(getContext(), AnswerActivity.class);
-            intent.putExtra("question", question);
-            intent.putExtra("answer", answer);
+            intent.putExtra(Constants.KEY_ACTIVITY_QUESTION, question);
+            intent.putExtra(Constants.KEY_ACTIVITY_ANSWER, answer);
             getContext().startActivity(intent);
         }
     }

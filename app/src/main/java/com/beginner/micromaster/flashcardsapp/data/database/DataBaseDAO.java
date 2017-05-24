@@ -42,7 +42,7 @@ public class DataBaseDAO {
     }
 
     public List<Card> getAllCards(){
-        List<Card> cardList = new ArrayList<Card>();
+        List<Card> cardList = new ArrayList<>();
         Cursor cursor = sqLiteDatabase.query(DataContract.TodoEntry.TABLE_CARDS, null, null, null, null, null, null);
 
         if(cursor.moveToFirst()){

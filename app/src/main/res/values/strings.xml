@@ -17,6 +17,8 @@
     <string name="setting_activate">Activate reminder</string>
     <string name="setting_frequency">Frequency</string>
     <string name="setting_frequency_summary">10 hours</string>
+    <string name="setting_one_hour">1 hour</string>
+    <string name="setting_hours">%d hours</string>
 
     <string name="dialog_number_hour">Hour</string>
 

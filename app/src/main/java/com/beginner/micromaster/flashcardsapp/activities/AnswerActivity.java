@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.beginner.micromaster.flashcardsapp.R;
+import com.beginner.micromaster.flashcardsapp.util.Constants;
 
 public class AnswerActivity extends AppCompatActivity {
 
@@ -22,8 +23,8 @@ public class AnswerActivity extends AppCompatActivity {
 
         Bundle extras = getIntent().getExtras();
         if(extras != null){
-            tvQuestion.setText(extras.getString("question"));
-            tvAnswer.setText(extras.getString("answer"));
+            tvQuestion.setText(extras.getString(Constants.KEY_ACTIVITY_QUESTION));
+            tvAnswer.setText(extras.getString(Constants.KEY_ACTIVITY_ANSWER));
         }
     }
 

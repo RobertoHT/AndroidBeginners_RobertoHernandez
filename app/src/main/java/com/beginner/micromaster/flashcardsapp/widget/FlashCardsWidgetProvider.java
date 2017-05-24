@@ -9,35 +9,44 @@ import android.content.SharedPreferences;
 import android.widget.RemoteViews;
 
 import com.beginner.micromaster.flashcardsapp.R;
-import com.beginner.micromaster.flashcardsapp.data.database.DataBaseDAO;
+import com.beginner.micromaster.flashcardsapp.data.DataCard;
 import com.beginner.micromaster.flashcardsapp.model.Card;
-import com.google.gson.Gson;
+import com.beginner.micromaster.flashcardsapp.util.Constants;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
-
-import static com.beginner.micromaster.flashcardsapp.data.reader.JsonReader.loadJsonFromAsset;
 
 /**
  * Created by praxis on 18/05/17.
  */
 
 public class FlashCardsWidgetProvider extends AppWidgetProvider {
-    private static final String MY_PREFERENCE = "MyPreference";
-    private static final String KEY_ACTIVE = "active";
-    private static final String KEY_QUESTION = "question";
-    private static final String KEY_ANSWER = "answer";
-    private static final String BUTTON_SEE = "buttonSee";
-    private static final String BUTTON_NEXT = "buttonNext";
+    private String KEY_MY_PREFERENCE = Constants.KEY_WIDGET_MY_PREFERENCE;
+    private String KEY_ACTIVE = Constants.KEY_WIDGET_ACTIVE;
+    private String KEY_QUESTION = Constants.KEY_WIDGET_QUESTION;
+    private String KEY_ANSWER = Constants.KEY_WIDGET_ANSWER;
+    private String KEY_BUTTON_SEE = Constants.KEY_WIDGET_BUTTON_SEE;
+    private String KEY_BUTTON_NEXT = Constants.KEY_WIDGET_BUTTON_NEXT;
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        for(int x=0; x<appWidgetIds.length; x++){
-            int appWidgetId = appWidgetIds[x];
-
+        for (int appWidgetId:appWidgetIds){
             updateWidget(context, appWidgetManager, appWidgetId);
+        }
+    }
+
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        super.onReceive(context, intent);
+
+        int widgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+
+        if(intent.getAction().equals(KEY_BUTTON_SEE)){
+            seeQuestionAnswer(context, appWidgetManager, widgetId);
+        }
+        else if (intent.getAction().equals(KEY_BUTTON_NEXT)){
+            updateWidget(context, appWidgetManager, widgetId);
         }
     }
 
@@ -45,12 +54,12 @@ public class FlashCardsWidgetProvider extends AppWidgetProvider {
         Card card = getCard(context);
 
         Intent intentSee = new Intent(context, FlashCardsWidgetProvider.class);
-        intentSee.setAction(BUTTON_SEE);
+        intentSee.setAction(KEY_BUTTON_SEE);
         intentSee.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
         PendingIntent pendingIntentSee = PendingIntent.getBroadcast(context, 0, intentSee, 0);
 
         Intent intentNext = new Intent(context, FlashCardsWidgetProvider.class);
-        intentNext.setAction(BUTTON_NEXT);
+        intentNext.setAction(KEY_BUTTON_NEXT);
         intentNext.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
         PendingIntent pendingIntentNext = PendingIntent.getBroadcast(context, 0, intentNext, 0);
 
@@ -65,36 +74,25 @@ public class FlashCardsWidgetProvider extends AppWidgetProvider {
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
 
-    @Override
-    public void onReceive(Context context, Intent intent) {
-        super.onReceive(context, intent);
+    private void seeQuestionAnswer(Context context, AppWidgetManager appWidgetManager, int appWidgetId){
+        boolean active = getActivatePreference(context);
 
-        int widgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
-        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-
-        if(intent.getAction().equals(BUTTON_SEE)){
-            boolean active = getActivatePreference(context);
-
-            RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
-            if(active){
-                views.setTextViewText(R.id.widget_text, getCardPreference(context, true));
-                views.setTextViewText(R.id.widget_btn_see, context.getString(R.string.widget_button_question));
-            }else{
-                views.setTextViewText(R.id.widget_text, getCardPreference(context, false));
-                views.setTextViewText(R.id.widget_btn_see, context.getString(R.string.widget_button_answer));
-            }
-
-            setActivatePreference(context, !active);
-
-            appWidgetManager.updateAppWidget(widgetId, views);
+        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
+        if(active){
+            views.setTextViewText(R.id.widget_text, getCardPreference(context, true));
+            views.setTextViewText(R.id.widget_btn_see, context.getString(R.string.widget_button_question));
+        }else{
+            views.setTextViewText(R.id.widget_text, getCardPreference(context, false));
+            views.setTextViewText(R.id.widget_btn_see, context.getString(R.string.widget_button_answer));
         }
-        else if (intent.getAction().equals(BUTTON_NEXT)){
-            updateWidget(context, appWidgetManager, widgetId);
-        }
+
+        setActivatePreference(context, !active);
+
+        appWidgetManager.updateAppWidget(appWidgetId, views);
     }
 
     private void setCardPreference(Context context, String question, String answer){
-        SharedPreferences preferences = context.getSharedPreferences(MY_PREFERENCE, Context.MODE_PRIVATE);
+        SharedPreferences preferences = context.getSharedPreferences(KEY_MY_PREFERENCE, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString(KEY_QUESTION, question);
         editor.putString(KEY_ANSWER, answer);
@@ -102,7 +100,7 @@ public class FlashCardsWidgetProvider extends AppWidgetProvider {
     }
 
     private String getCardPreference(Context context, boolean activate){
-        SharedPreferences preferences = context.getSharedPreferences(MY_PREFERENCE, Context.MODE_PRIVATE);
+        SharedPreferences preferences = context.getSharedPreferences(KEY_MY_PREFERENCE, Context.MODE_PRIVATE);
         if(activate){
             return preferences.getString(KEY_ANSWER, "");
         }else{
@@ -111,48 +109,25 @@ public class FlashCardsWidgetProvider extends AppWidgetProvider {
     }
 
     private void setActivatePreference(Context context, boolean activate){
-        SharedPreferences preferences = context.getSharedPreferences(MY_PREFERENCE, Context.MODE_PRIVATE);
+        SharedPreferences preferences = context.getSharedPreferences(KEY_MY_PREFERENCE, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putBoolean(KEY_ACTIVE, activate);
         editor.apply();
     }
 
     private boolean getActivatePreference(Context context){
-        SharedPreferences preferences = context.getSharedPreferences(MY_PREFERENCE, Context.MODE_PRIVATE);
+        SharedPreferences preferences = context.getSharedPreferences(KEY_MY_PREFERENCE, Context.MODE_PRIVATE);
         return preferences.getBoolean(KEY_ACTIVE, false);
     }
 
     private Card getCard(Context context){
         List<Card> cardList;
 
-        cardList = getCardListFromJson(context);
-        cardList.addAll(getCardListFromDB(context));
+        cardList = DataCard.getCardList(context);
 
         Random random = new Random();
         int x = random.nextInt(cardList.size());
 
         return cardList.get(x);
-    }
-
-    private List<Card> getCardListFromJson(Context context){
-        List<Card> list;
-
-        String json = loadJsonFromAsset(context.getApplicationContext(), "cards.json");
-        Gson gson = new Gson();
-        Card[] cards = gson.fromJson(json, Card[].class);
-        list = new ArrayList<>(Arrays.asList(cards));
-
-        return list;
-    }
-
-    private List<Card> getCardListFromDB(Context context){
-        List<Card> list;
-
-        DataBaseDAO dao = new DataBaseDAO(context);
-        dao.open();
-        list = dao.getAllCards();
-        dao.close();
-
-        return list;
     }
 }

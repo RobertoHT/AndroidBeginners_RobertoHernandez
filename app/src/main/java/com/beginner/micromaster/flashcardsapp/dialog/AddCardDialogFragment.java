@@ -22,8 +22,7 @@ public class AddCardDialogFragment extends DialogFragment {
     private DataBaseDAO dao;
 
     public static AddCardDialogFragment getInstance(){
-        AddCardDialogFragment fragment = new AddCardDialogFragment();
-        return fragment;
+        return new AddCardDialogFragment();
     }
 
     @Override

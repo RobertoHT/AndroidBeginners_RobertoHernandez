@@ -15,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.beginner.micromaster.flashcardsapp.R;
 import com.beginner.micromaster.flashcardsapp.service.ReminderService;
+import com.beginner.micromaster.flashcardsapp.util.Constants;
 
 /**
  * Created by praxis on 11/05/17.
@@ -30,6 +31,8 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     public class SettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener{
+        private String KEY_REMINDER = Constants.KEY_SETTING_ENABLE_REMINDER;
+        private String KEY_FREQUENCY = Constants.KEY_SETTING_FREQUENCY;
         private int HOUR = 3600000;
         private int JOB_ID = 1;
 
@@ -41,29 +44,29 @@ public class SettingsActivity extends AppCompatActivity {
             addPreferencesFromResource(R.xml.settings);
 
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-            int frequency = preferences.getInt("frequency", 10);
-            changeSummaryFrequency("frequency", frequency);
+            int frequency = preferences.getInt(KEY_FREQUENCY, 10);
+            changeSummaryFrequency(frequency);
         }
 
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            if(key.equals("activate")){
-                enableReminder(sharedPreferences, key);
+            if(key.equals(KEY_REMINDER)){
+                enableReminder(sharedPreferences);
             }
-            else if (key.equals("frequency")){
-                changeSummaryFrequency(key, sharedPreferences.getInt(key, 10));
+            else if (key.equals(KEY_FREQUENCY)){
+                changeSummaryFrequency(sharedPreferences.getInt(key, 10));
             }
         }
 
-        private void enableReminder(SharedPreferences sharedPreferences, String key){
+        private void enableReminder(SharedPreferences sharedPreferences){
             JobScheduler jobScheduler = (JobScheduler) getSystemService(Context.JOB_SCHEDULER_SERVICE);
             ComponentName jobService = new ComponentName(getPackageName(), ReminderService.class.getName());
 
-            boolean activate = sharedPreferences.getBoolean(key, false);
+            boolean activate = sharedPreferences.getBoolean(KEY_REMINDER, false);
             if(activate){
                 jobScheduler.cancelAll();
 
-                int refresh = HOUR * sharedPreferences.getInt("frequency", 10);
+                int refresh = HOUR * sharedPreferences.getInt(KEY_FREQUENCY, 10);
                 JobInfo jobInfo = new JobInfo.Builder(JOB_ID, jobService).setPeriodic(refresh).build();
                 jobScheduler.schedule(jobInfo);
             } else {
@@ -71,15 +74,15 @@ public class SettingsActivity extends AppCompatActivity {
             }
         }
 
-        private void changeSummaryFrequency(String key, int frequency){
+        private void changeSummaryFrequency(int frequency){
             String summary;
             if(frequency == 1){
-                summary = "1 hour";
+                summary = getString(R.string.setting_one_hour);
             } else {
-                summary = frequency + " hours";
+                summary = String.format(getString(R.string.setting_hours), frequency);
             }
 
-            Preference preference = findPreference(key);
+            Preference preference = findPreference(KEY_FREQUENCY);
             preference.setSummary(summary);
         }
 
