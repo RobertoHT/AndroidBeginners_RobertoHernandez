@@ -11,6 +11,7 @@
             android:key="setting_frequency"
             android:title="@string/setting_frequency"
             android:defaultValue="10"
-            android:summary="@string/setting_frequency_summary"/>
+            android:summary="@string/setting_frequency_summary"
+            android:enabled="false"/>
     </PreferenceCategory>
 </PreferenceScreen>

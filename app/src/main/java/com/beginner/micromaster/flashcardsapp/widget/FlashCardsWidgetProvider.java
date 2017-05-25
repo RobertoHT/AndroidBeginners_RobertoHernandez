@@ -65,6 +65,7 @@ public class FlashCardsWidgetProvider extends AppWidgetProvider {
 
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
         views.setTextViewText(R.id.widget_text, card.getQuestion());
+        views.setTextViewText(R.id.widget_btn_see, context.getString(R.string.widget_button_answer));
         views.setOnClickPendingIntent(R.id.widget_btn_see, pendingIntentSee);
         views.setOnClickPendingIntent(R.id.widget_btn_next, pendingIntentNext);
 

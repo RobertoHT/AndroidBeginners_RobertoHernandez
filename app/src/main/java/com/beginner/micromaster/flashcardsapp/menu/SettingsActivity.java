@@ -43,7 +43,12 @@ public class SettingsActivity extends AppCompatActivity {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.settings);
 
+            setFrequency();
+        }
+
+        private void setFrequency(){
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            findPreference(KEY_FREQUENCY).setEnabled(preferences.getBoolean(KEY_REMINDER, false));
             int frequency = preferences.getInt(KEY_FREQUENCY, 10);
             changeSummaryFrequency(frequency);
         }
@@ -55,6 +60,7 @@ public class SettingsActivity extends AppCompatActivity {
             }
             else if (key.equals(KEY_FREQUENCY)){
                 changeSummaryFrequency(sharedPreferences.getInt(key, 10));
+                enableReminder(sharedPreferences);
             }
         }
 
@@ -63,6 +69,7 @@ public class SettingsActivity extends AppCompatActivity {
             ComponentName jobService = new ComponentName(getPackageName(), ReminderService.class.getName());
 
             boolean activate = sharedPreferences.getBoolean(KEY_REMINDER, false);
+            findPreference(KEY_FREQUENCY).setEnabled(activate);
             if(activate){
                 jobScheduler.cancelAll();
 

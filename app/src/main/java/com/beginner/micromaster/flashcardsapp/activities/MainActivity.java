@@ -21,8 +21,10 @@ import com.beginner.micromaster.flashcardsapp.model.Card;
 
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements AddCardDialogFragment.AddCardDialogListener {
     private RecyclerView recyclerView;
+    private CardAdapter adapter;
+    private List<Card> cardList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,11 +55,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getData(){
-        List<Card> cardList;
-
         cardList = DataCard.getCardList(this);
 
-        CardAdapter adapter = new CardAdapter(this, cardList);
+        adapter = new CardAdapter(this, cardList);
         recyclerView.setAdapter(adapter);
     }
 
@@ -79,5 +79,12 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onDialogPositiveClick() {
+        cardList.clear();
+        cardList.addAll(DataCard.getCardList(this));
+        adapter.notifyDataSetChanged();
     }
 }

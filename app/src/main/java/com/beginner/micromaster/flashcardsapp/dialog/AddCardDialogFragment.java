@@ -19,6 +19,7 @@ import com.beginner.micromaster.flashcardsapp.model.Card;
  */
 
 public class AddCardDialogFragment extends DialogFragment {
+    private AddCardDialogListener listener;
     private DataBaseDAO dao;
 
     public static AddCardDialogFragment getInstance(){
@@ -29,6 +30,7 @@ public class AddCardDialogFragment extends DialogFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        listener = (AddCardDialogListener) getActivity();
         dao = new DataBaseDAO(getActivity());
     }
 
@@ -51,6 +53,8 @@ public class AddCardDialogFragment extends DialogFragment {
                 dao.open();
                 dao.addCard(new Card(question, answer));
                 dao.close();
+
+                listener.onDialogPositiveClick();
             }
         }).setNegativeButton(getString(R.string.button_cancel), new DialogInterface.OnClickListener() {
             @Override
@@ -60,5 +64,9 @@ public class AddCardDialogFragment extends DialogFragment {
         });
 
         return builder.create();
+    }
+
+    public interface AddCardDialogListener{
+        public void onDialogPositiveClick();
     }
 }
