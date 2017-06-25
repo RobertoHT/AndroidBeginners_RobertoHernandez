@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:key="setting_reminder"
+        android:title="@string/setting_title_reminder">
+        <CheckBoxPreference
+            android:key="setting_activate"
+            android:title="@string/setting_activate"
+            android:defaultValue="false" />
+        <com.beginner.micromaster.flashcardsapp.preference.NumberPickerPreference
+            android:key="setting_frequency"
+            android:title="@string/setting_frequency"
+            android:defaultValue="10"
+            android:summary="@string/setting_frequency_summary"
+            android:enabled="false"/>
+    </PreferenceCategory>
+</PreferenceScreen>

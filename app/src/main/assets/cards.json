@@ -1,0 +1,7 @@
+[{
+	"question": "What is an Activity?",
+	"answer": "An activity represents a screen with user interface."
+}, {
+	"question": "What is a Service?",
+	"answer": "A service is a component that runs in the background for extended operations"
+}]

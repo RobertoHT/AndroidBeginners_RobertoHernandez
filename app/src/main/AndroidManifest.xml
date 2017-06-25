@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
+            android:name=".activities.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -19,6 +19,34 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".activities.AnswerActivity"
+            android:label="@string/title_activity_answer"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
+            android:name=".menu.SettingsActivity"
+            android:parentActivityName=".activities.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.MainActivity"/>
+        </activity>
+        <provider
+            android:name=".data.provider.CardProvider"
+			android:authorities="com.beginner.micromaster.flashcardsapp"
+			android:exported="false"
+			android:syncable="true"/>
+        <receiver android:name=".widget.FlashCardsWidgetProvider">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider" android:resource="@xml/widget_info"/>
+        </receiver>
+        <service
+            android:name=".service.ReminderService"
+            android:permission="android.permission.BIND_JOB_SERVICE"
+            android:exported="true">
+        </service>
     </application>
 
 </manifest>
